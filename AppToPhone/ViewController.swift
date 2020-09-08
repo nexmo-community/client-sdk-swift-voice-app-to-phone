@@ -70,23 +70,27 @@ extension ViewController: NXMClientDelegate {
     
     func client(_ client: NXMClient, didReceiveError error: Error) {
         print("✆  ‼️ connection error: \(error.localizedDescription)")
-        callButton.alpha = 0
-        connectionStatusLabel.text = error.localizedDescription
+        DispatchQueue.main.async { [weak self] in
+            self?.callButton.alpha = 0
+            self?.connectionStatusLabel.text = error.localizedDescription
+        }
     }
     
     func client(_ client: NXMClient, didChange status: NXMConnectionStatus,
                 reason: NXMConnectionStatusReason) {
-        callButton.alpha = 0
-        switch status {
-        case .connected:
-            connectionStatusLabel.text = "Connected"
-            callButton.alpha = 1
-        case .disconnected:
-            connectionStatusLabel.text = "Disconnected"
-        case .connecting:
-            connectionStatusLabel.text = "Connecting"
-        @unknown default:
-            connectionStatusLabel.text = "Unknown"
+        DispatchQueue.main.async { [weak self] in
+            self?.callButton.alpha = 0
+            switch status {
+            case .connected:
+                self?.connectionStatusLabel.text = "Connected"
+                self?.callButton.alpha = 1
+            case .disconnected:
+                self?.connectionStatusLabel.text = "Disconnected"
+            case .connecting:
+                self?.connectionStatusLabel.text = "Connecting"
+            @unknown default:
+                self?.connectionStatusLabel.text = "Unknown"
+            }
         }
     }
     
